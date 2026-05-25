@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: game-engine-service
+
+server:
+  port: 8081

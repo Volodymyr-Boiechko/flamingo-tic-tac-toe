@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: game-session-service
+  main:
+    web-application-type: servlet
+
+server:
+  port: 8082
+
+game-engine:
+  url: ${GAME_ENGINE_URL:http://localhost:8081}
