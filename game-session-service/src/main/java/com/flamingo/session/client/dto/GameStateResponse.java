@@ -5,7 +5,7 @@ import java.util.List;
 public record GameStateResponse(
         String gameId,
         List<List<String>> board,
-        String status,
-        String nextPlayer
+        GameStatusValue status,
+        PlayerValue nextPlayer
 ) {
 }

@@ -23,11 +23,12 @@ public class Session {
     }
 
     public void recordMove(Move move) {
-        throw new UnsupportedOperationException("Not implemented");
+        moves.add(move);
     }
 
     public void markFinished() {
-        throw new UnsupportedOperationException("Not implemented");
+        this.status = SessionStatus.FINISHED;
+        this.finishedAt = Instant.now();
     }
 
     public String getSessionId() {
