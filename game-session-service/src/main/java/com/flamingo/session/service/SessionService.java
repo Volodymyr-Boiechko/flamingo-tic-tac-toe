@@ -1,5 +1,6 @@
 package com.flamingo.session.service;
 
+import com.flamingo.session.api.dto.SimulationEvent;
 import com.flamingo.session.client.GameEngineClient;
 import com.flamingo.session.domain.Session;
 import com.flamingo.session.domain.SessionStatus;
@@ -10,6 +11,7 @@ import com.flamingo.session.repository.SessionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -100,5 +102,15 @@ public class SessionService {
     public Mono<Session> getSession(String sessionId) {
         return Mono.fromCallable(() -> repository.findById(sessionId)
                 .orElseThrow(() -> new SessionNotFoundException("session not found: " + sessionId)));
+    }
+
+    /**
+     * Returns the live SSE event stream for an existing session.
+     *
+     * @throws SessionNotFoundException if no session matches the id
+     */
+    public Flux<SimulationEvent> streamEvents(String sessionId) {
+        return getSession(sessionId)
+                .thenMany(simulator.eventStream(sessionId));
     }
 }

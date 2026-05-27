@@ -154,6 +154,14 @@ class GameSessionIntegrationTest {
     }
 
     @Test
+    void streamEventsReturns404WhenSessionUnknown() {
+        webTestClient.get().uri("/sessions/unknown-id/events")
+                .accept(MediaType.TEXT_EVENT_STREAM)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     void simulateReturns409WhenSessionAlreadyFinished() {
         stubCreateGame();
         stubMoveReturnsXWon();

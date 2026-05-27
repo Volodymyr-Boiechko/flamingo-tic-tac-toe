@@ -89,7 +89,7 @@ class SessionControllerTest {
 
     @Test
     void streamEventsReturnsTextEventStreamMediaType() {
-        when(simulator.eventStream("session-1")).thenReturn(Flux.empty());
+        when(sessionService.streamEvents("session-1")).thenReturn(Flux.empty());
 
         client.get().uri("/sessions/session-1/events")
                 .accept(MediaType.TEXT_EVENT_STREAM)
@@ -100,7 +100,7 @@ class SessionControllerTest {
 
     @Test
     void streamEventsReturnsAllSimulationEvents() {
-        when(simulator.eventStream("session-1")).thenReturn(Flux.just(
+        when(sessionService.streamEvents("session-1")).thenReturn(Flux.just(
                 new SimulationEvent(SimulationEventType.MOVE_MADE,
                         new MoveDto(PlayerValue.X, 0, 0, Instant.now()), null, null),
                 new SimulationEvent(SimulationEventType.GAME_FINISHED, null, null, null)));

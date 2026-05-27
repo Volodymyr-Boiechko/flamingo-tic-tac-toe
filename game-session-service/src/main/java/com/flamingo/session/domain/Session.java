@@ -2,6 +2,7 @@ package com.flamingo.session.domain;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Session {
@@ -17,7 +18,7 @@ public class Session {
         this.sessionId = sessionId;
         this.gameId = gameId;
         this.status = SessionStatus.CREATED;
-        this.moves = new ArrayList<>();
+        this.moves = Collections.synchronizedList(new ArrayList<>());
         this.createdAt = Instant.now();
         this.finishedAt = null;
     }
@@ -57,7 +58,9 @@ public class Session {
     }
 
     public List<Move> getMoves() {
-        return moves;
+        synchronized (moves) {
+            return List.copyOf(moves);
+        }
     }
 
     public Instant getCreatedAt() {

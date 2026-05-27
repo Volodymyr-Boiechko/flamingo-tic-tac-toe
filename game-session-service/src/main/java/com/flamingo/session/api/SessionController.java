@@ -60,7 +60,7 @@ public class SessionController {
 
     @GetMapping(value = "/{sessionId}/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<SimulationEvent>> streamEvents(@PathVariable String sessionId) {
-        return simulator.eventStream(sessionId)
+        return sessionService.streamEvents(sessionId)
                 .map(event -> ServerSentEvent.builder(event).build());
     }
 }

@@ -2,7 +2,7 @@ export type PlayerValue = 'X' | 'O';
 
 export type GameStatusValue = 'IN_PROGRESS' | 'X_WON' | 'O_WON' | 'DRAW';
 
-export type SessionStatus = 'CREATED' | 'FINISHED';
+export type SessionStatus = 'CREATED' | 'SIMULATING' | 'FINISHED' | 'FAILED';
 
 export interface CreateSessionResponse {
   sessionId: string;
