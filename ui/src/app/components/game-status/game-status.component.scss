@@ -18,16 +18,31 @@
   height: 22px;
   padding: 0 6px;
   background: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
   border-radius: 6px;
   font-weight: 700;
   font-size: 0.875rem;
   font-family: 'Roboto Mono', 'Courier New', monospace;
+  color: var(--mat-sys-on-surface);
 }
 
-.status-winner {
-  background: var(--mat-sys-primary-container) !important;
-  color: var(--mat-sys-on-primary-container) !important;
+.status-winner-x {
+  background: var(--player-x-bg) !important;
+  color: var(--player-x-color) !important;
+
+  .winner-badge {
+    background: var(--player-x-color);
+    color: white;
+  }
+}
+
+.status-winner-o {
+  background: var(--player-o-bg) !important;
+  color: var(--player-o-color) !important;
+
+  .winner-badge {
+    background: var(--player-o-color);
+    color: white;
+  }
 }
 
 .status-draw {
