@@ -1,11 +1,36 @@
-<main class="app-container">
-  <h1>Tic Tac Toe Simulation</h1>
+<div class="page">
+  <header class="header">
+    <h1>
+      <mat-icon class="header-icon">grid_3x3</mat-icon>
+      Distributed Tic Tac Toe
+    </h1>
+    <app-game-status
+      [status]="events.status()"
+      [winner]="events.winner()"
+      [moveCount]="events.moveCount()"
+    />
+  </header>
 
-  <section class="controls">
-    <button disabled>Start Simulation</button>
-    <div class="status-indicator">
-      <span class="status-label">Status:</span>
-      <span class="status-value">Idle</span>
-    </div>
-  </section>
-</main>
+  <main class="content">
+    <mat-card class="game-card">
+      <mat-card-content>
+        <app-game-board [board]="events.board()" />
+      </mat-card-content>
+      <mat-card-actions>
+        <app-start-controls
+          [isRunning]="events.isConnected() && !events.isFinished()"
+          [isFinished]="events.isFinished()"
+          [isLoading]="isLoading()"
+          (start)="start()"
+          (reset)="reset()"
+        />
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="history-card">
+      <mat-card-content>
+        <app-move-history [moves]="events.moves()" />
+      </mat-card-content>
+    </mat-card>
+  </main>
+</div>

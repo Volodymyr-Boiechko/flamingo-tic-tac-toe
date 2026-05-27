@@ -1,0 +1,6 @@
+<mat-chip-set>
+  <mat-chip [class.status-winner]="winner() !== null" [class.status-draw]="status() === 'DRAW'">
+    <mat-icon matChipAvatar>{{ icon() }}</mat-icon>
+    {{ label() }}
+  </mat-chip>
+</mat-chip-set>

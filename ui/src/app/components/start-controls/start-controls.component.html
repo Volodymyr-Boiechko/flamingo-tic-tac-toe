@@ -1,0 +1,23 @@
+<div class="controls">
+  @if (!isFinished()) {
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="isRunning() || isLoading()"
+      (click)="start.emit()"
+    >
+      @if (isLoading()) {
+        <mat-progress-spinner mode="indeterminate" diameter="20" />
+        <span>Starting...</span>
+      } @else {
+        <mat-icon>play_arrow</mat-icon>
+        <span>Start Simulation</span>
+      }
+    </button>
+  } @else {
+    <button mat-flat-button color="accent" (click)="reset.emit()">
+      <mat-icon>replay</mat-icon>
+      <span>Play Again</span>
+    </button>
+  }
+</div>

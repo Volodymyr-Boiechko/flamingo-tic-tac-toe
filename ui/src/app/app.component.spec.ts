@@ -1,33 +1,41 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
+  let fixture: ComponentFixture<AppComponent>;
+  let component: AppComponent;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideAnimationsAsync()],
     }).compileComponents();
-  });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it('should render the heading', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Tic Tac Toe Simulation');
   });
 
-  it('should render a disabled Start Simulation button', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    const button = compiled.querySelector('button');
-    expect(button?.textContent?.trim()).toBe('Start Simulation');
-    expect(button?.disabled).toBeTrue();
+  it('renders without errors', () => {
+    expect(component).toBeTruthy();
   });
 
+  it('renders header with title', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain('Tic Tac Toe');
+  });
+
+  it('renders empty 3x3 board on initial load', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const cells = compiled.querySelectorAll('.cell');
+    expect(cells.length).toBe(9);
+  });
+
+  it('renders Start button initially', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('Start Simulation');
+  });
 });

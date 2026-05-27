@@ -1,0 +1,12 @@
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+
+  button {
+    min-width: 200px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+}

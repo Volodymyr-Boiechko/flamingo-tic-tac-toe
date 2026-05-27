@@ -1,0 +1,21 @@
+<div class="board" role="grid" aria-label="Tic Tac Toe board">
+  @for (row of board(); track $index; let rowIndex = $index) {
+    <div class="board-row" role="row">
+      @for (cell of row; track $index; let colIndex = $index) {
+        <div
+          class="cell"
+          [class.cell-x]="cell === 'X'"
+          [class.cell-o]="cell === 'O'"
+          role="gridcell"
+          [attr.aria-label]="
+            cell ? cell + ' at row ' + (rowIndex + 1) + ', column ' + (colIndex + 1) : 'empty cell'
+          "
+        >
+          @if (cell) {
+            <span class="cell-mark">{{ cell }}</span>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

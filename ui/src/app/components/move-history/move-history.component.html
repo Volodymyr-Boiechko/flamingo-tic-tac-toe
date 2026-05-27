@@ -1,0 +1,27 @@
+<div class="move-history">
+  <h3 class="title">
+    <mat-icon>history</mat-icon>
+    Move history
+  </h3>
+
+  @if (moves().length === 0) {
+    <p class="empty">No moves yet. Press Start to begin.</p>
+  } @else {
+    <mat-list>
+      @for (move of moves(); track move.timestamp; let i = $index) {
+        <mat-list-item>
+          <span matListItemAvatar class="move-index">{{ i + 1 }}</span>
+          <span matListItemTitle>
+            <strong [class.player-x]="move.player === 'X'" [class.player-o]="move.player === 'O'">
+              {{ move.player }}
+            </strong>
+            → ({{ move.row }}, {{ move.col }})
+          </span>
+          <span matListItemLine class="timestamp">
+            {{ move.timestamp | date: 'HH:mm:ss.SSS' }}
+          </span>
+        </mat-list-item>
+      }
+    </mat-list>
+  }
+</div>
