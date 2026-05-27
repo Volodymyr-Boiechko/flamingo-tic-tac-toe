@@ -6,6 +6,7 @@
           class="cell"
           [class.cell-x]="cell === 'X'"
           [class.cell-o]="cell === 'O'"
+          [class.cell-winning]="isWinning(rowIndex, colIndex)"
           role="gridcell"
           [attr.aria-label]="
             cell ? cell + ' at row ' + (rowIndex + 1) + ', column ' + (colIndex + 1) : 'empty cell'

@@ -16,19 +16,6 @@ export class GameStatusComponent {
   readonly winner = input<PlayerValue | null>(null);
   readonly moveCount = input<number>(0);
 
-  readonly label = computed(() => {
-    switch (this.status()) {
-      case 'IN_PROGRESS':
-        return this.moveCount() === 0 ? 'Ready to start' : 'In progress';
-      case 'X_WON':
-        return 'X wins!';
-      case 'O_WON':
-        return 'O wins!';
-      case 'DRAW':
-        return "It's a draw";
-    }
-  });
-
   readonly icon = computed(() => {
     switch (this.status()) {
       case 'IN_PROGRESS':
@@ -39,5 +26,9 @@ export class GameStatusComponent {
       case 'DRAW':
         return 'handshake';
     }
+  });
+
+  readonly inProgressLabel = computed(() => {
+    return this.moveCount() === 0 ? 'Ready to start' : 'In progress';
   });
 }

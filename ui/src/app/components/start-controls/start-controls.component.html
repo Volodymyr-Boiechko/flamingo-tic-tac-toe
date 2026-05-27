@@ -7,17 +7,23 @@
       (click)="start.emit()"
     >
       @if (isLoading()) {
-        <mat-progress-spinner mode="indeterminate" diameter="20" />
-        <span>Starting...</span>
+        <ng-container>
+          <mat-progress-spinner mode="indeterminate" diameter="20" />
+          <span>Starting...</span>
+        </ng-container>
       } @else {
-        <mat-icon>play_arrow</mat-icon>
-        <span>Start Simulation</span>
+        <ng-container>
+          <mat-icon>play_arrow</mat-icon>
+          <span>Start Simulation</span>
+        </ng-container>
       }
     </button>
   } @else {
     <button mat-flat-button color="accent" (click)="reset.emit()">
-      <mat-icon>replay</mat-icon>
-      <span>Play Again</span>
+      <ng-container>
+        <mat-icon>replay</mat-icon>
+        <span>Play Again</span>
+      </ng-container>
     </button>
   }
 </div>

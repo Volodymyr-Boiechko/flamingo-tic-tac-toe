@@ -1,3 +1,30 @@
+:host {
+  mat-chip {
+    font-weight: 600;
+  }
+}
+
+.winner-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.winner-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+}
+
 .status-winner {
   background: var(--mat-sys-primary-container) !important;
   color: var(--mat-sys-on-primary-container) !important;

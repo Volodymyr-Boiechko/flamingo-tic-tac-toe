@@ -9,13 +9,17 @@
   } @else {
     <mat-list>
       @for (move of moves(); track move.timestamp; let i = $index) {
-        <mat-list-item>
+        <mat-list-item class="move-item">
           <span matListItemAvatar class="move-index">{{ i + 1 }}</span>
-          <span matListItemTitle>
-            <strong [class.player-x]="move.player === 'X'" [class.player-o]="move.player === 'O'">
-              {{ move.player }}
-            </strong>
-            → ({{ move.row }}, {{ move.col }})
+          <span matListItemTitle class="move-title">
+            <span
+              class="player-badge"
+              [class.player-x]="move.player === 'X'"
+              [class.player-o]="move.player === 'O'"
+              >{{ move.player }}
+            </span>
+            <span class="arrow">→</span>
+            <span class="position">({{ move.row }}, {{ move.col }})</span>
           </span>
           <span matListItemLine class="timestamp">
             {{ move.timestamp | date: 'HH:mm:ss.SSS' }}

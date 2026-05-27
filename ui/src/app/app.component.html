@@ -14,7 +14,10 @@
   <main class="content">
     <mat-card class="game-card">
       <mat-card-content>
-        <app-game-board [board]="events.board()" />
+        <app-game-board
+          [board]="events.board()"
+          [winningCells]="events.winningCells()"
+        />
       </mat-card-content>
       <mat-card-actions>
         <app-start-controls

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Board } from '../../models/session.model';
 
 @Component({
@@ -11,4 +11,13 @@ import { Board } from '../../models/session.model';
 })
 export class GameBoardComponent {
   readonly board = input.required<Board>();
+  readonly winningCells = input<Array<[number, number]>>([]);
+
+  readonly winningSet = computed(() => {
+    return new Set(this.winningCells().map(([r, c]) => `${r},${c}`));
+  });
+
+  isWinning(row: number, col: number): boolean {
+    return this.winningSet().has(`${row},${col}`);
+  }
 }

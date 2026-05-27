@@ -1,6 +1,21 @@
 <mat-chip-set>
   <mat-chip [class.status-winner]="winner() !== null" [class.status-draw]="status() === 'DRAW'">
     <mat-icon matChipAvatar>{{ icon() }}</mat-icon>
-    {{ label() }}
+
+    @switch (status()) {
+      @case ('IN_PROGRESS') {
+        {{ inProgressLabel() }}
+      }
+      @case ('DRAW') {
+        It's a draw
+      }
+      @default {
+        <span class="winner-text">
+          Player
+          <span class="winner-badge">{{ winner() }}</span>
+          wins!
+        </span>
+      }
+    }
   </mat-chip>
 </mat-chip-set>

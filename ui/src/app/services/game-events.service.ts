@@ -26,6 +26,65 @@ export class GameEventsService {
   });
   readonly moveCount = computed(() => this._moves().length);
 
+  readonly winningCells = computed<Array<[number, number]>>(() => {
+    const status = this._status();
+    if (status !== 'X_WON' && status !== 'O_WON') return [];
+
+    const board = this._board();
+    const player: PlayerValue = status === 'X_WON' ? 'X' : 'O';
+
+    const lines: Array<Array<[number, number]>> = [
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+      ],
+      [
+        [1, 0],
+        [1, 1],
+        [1, 2],
+      ],
+      [
+        [2, 0],
+        [2, 1],
+        [2, 2],
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+      ],
+      [
+        [0, 1],
+        [1, 1],
+        [2, 1],
+      ],
+      [
+        [0, 2],
+        [1, 2],
+        [2, 2],
+      ],
+      [
+        [0, 0],
+        [1, 1],
+        [2, 2],
+      ],
+      [
+        [0, 2],
+        [1, 1],
+        [2, 0],
+      ],
+    ];
+
+    for (const line of lines) {
+      if (line.every(([r, c]) => board[r][c] === player)) {
+        return line;
+      }
+    }
+
+    return [];
+  });
+
   private eventSource: EventSource | null = null;
 
   connect(sessionId: string): void {
