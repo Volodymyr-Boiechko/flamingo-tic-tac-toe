@@ -179,6 +179,28 @@ class GameSessionIntegrationTest {
                 .jsonPath("$.title").isEqualTo("Session Already Finished");
     }
 
+    @Test
+    @DisplayName("Second POST /simulate while first is still running returns 409 Session Already Running")
+    void simulateReturns409WhenSessionAlreadyRunning() {
+        stubCreateGame();
+        // Engine never responds — simulation stays in SIMULATING state indefinitely
+        wireMock.stubFor(post(urlPathMatching("/games/.*/move"))
+                .willReturn(aResponse().withFixedDelay(60_000).withStatus(200)));
+
+        var sessionId = createSession();
+
+        webTestClient.post().uri("/sessions/{id}/simulate", sessionId)
+                .exchange()
+                .expectStatus().isAccepted();
+
+        // The CREATED → SIMULATING transition is synchronous; 202 already returned means done
+        webTestClient.post().uri("/sessions/{id}/simulate", sessionId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.CONFLICT)
+                .expectBody()
+                .jsonPath("$.title").isEqualTo("Session Already Running");
+    }
+
     // ── helpers ───────────────────────────────────────────
 
     private String createSession() {

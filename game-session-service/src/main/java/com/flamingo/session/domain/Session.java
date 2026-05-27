@@ -26,8 +26,21 @@ public class Session {
         moves.add(move);
     }
 
+    public synchronized boolean startSimulationIfNotStarted() {
+        if (this.status != SessionStatus.CREATED) {
+            return false;
+        }
+        this.status = SessionStatus.SIMULATING;
+        return true;
+    }
+
     public void markFinished() {
         this.status = SessionStatus.FINISHED;
+        this.finishedAt = Instant.now();
+    }
+
+    public void markFailed() {
+        this.status = SessionStatus.FAILED;
         this.finishedAt = Instant.now();
     }
 

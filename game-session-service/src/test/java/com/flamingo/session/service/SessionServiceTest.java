@@ -8,6 +8,7 @@ import com.flamingo.session.domain.Session;
 import com.flamingo.session.domain.SessionStatus;
 import com.flamingo.session.exception.EngineCommunicationException;
 import com.flamingo.session.exception.SessionAlreadyFinishedException;
+import com.flamingo.session.exception.SessionAlreadyRunningException;
 import com.flamingo.session.exception.SessionNotFoundException;
 import com.flamingo.session.repository.SessionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,6 +122,26 @@ class SessionServiceTest {
         StepVerifier.create(sessionService.startSimulation("session-1"))
                 .expectErrorSatisfies(t -> {
                     assertThat(t).isInstanceOf(SessionAlreadyFinishedException.class);
+                    assertThat(t.getMessage()).contains("session-1");
+                })
+                .verify();
+
+        verifyNoInteractions(simulator);
+    }
+
+    @Test
+    @DisplayName("startSimulation rejects concurrent call when session is already simulating")
+    void startSimulationThrowsWhenSessionAlreadyRunning() {
+        // Given — transition session to SIMULATING as a first call would
+        var session = new Session("session-1", "game-1");
+        session.startSimulationIfNotStarted();
+        assertThat(session.getStatus()).isEqualTo(SessionStatus.SIMULATING);
+        when(repository.findById("session-1")).thenReturn(Optional.of(session));
+
+        // When / Then
+        StepVerifier.create(sessionService.startSimulation("session-1"))
+                .expectErrorSatisfies(t -> {
+                    assertThat(t).isInstanceOf(SessionAlreadyRunningException.class);
                     assertThat(t.getMessage()).contains("session-1");
                 })
                 .verify();

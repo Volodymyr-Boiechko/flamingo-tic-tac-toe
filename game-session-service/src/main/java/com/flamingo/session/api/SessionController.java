@@ -17,6 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * REST endpoints for session lifecycle and live simulation events.
+ *
+ * <ul>
+ *   <li>{@code POST /sessions} — creates a new session (201)</li>
+ *   <li>{@code POST /sessions/{id}/simulate} — fires the async simulation (202)</li>
+ *   <li>{@code GET  /sessions/{id}} — returns session details with move history (200)</li>
+ *   <li>{@code GET  /sessions/{id}/events} — SSE stream of simulation events</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("/sessions")
 public class SessionController {

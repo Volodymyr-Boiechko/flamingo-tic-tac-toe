@@ -5,6 +5,8 @@ import com.flamingo.engine.domain.Player;
 import com.flamingo.engine.domain.Position;
 import com.flamingo.engine.exception.GameNotFoundException;
 import com.flamingo.engine.repository.GameRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -21,6 +23,8 @@ import java.util.UUID;
 @Service
 public class GameService {
 
+    private static final Logger log = LoggerFactory.getLogger(GameService.class);
+
     private final GameRepository repository;
 
     public GameService(GameRepository repository) {
@@ -33,6 +37,7 @@ public class GameService {
     public Game createGame() {
         var game = new Game(UUID.randomUUID().toString());
         repository.save(game);
+        log.info("Created game {}", game.getId());
         return game;
     }
 
@@ -42,6 +47,11 @@ public class GameService {
     public Game makeMove(String gameId, Player player, Position position) {
         var game = getGame(gameId);
         game.makeMove(position, player);
+        log.debug("Move recorded: game={} player={} position=({},{}) status={}",
+                gameId, player, position.row(), position.col(), game.getStatus());
+        if (game.getStatus().isFinished()) {
+            log.info("Game {} finished with status {}", gameId, game.getStatus());
+        }
         return game;
     }
 

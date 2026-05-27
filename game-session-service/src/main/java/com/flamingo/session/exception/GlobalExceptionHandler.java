@@ -22,6 +22,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(pd);
     }
 
+    @ExceptionHandler(SessionAlreadyRunningException.class)
+    public ResponseEntity<ProblemDetail> handleSessionAlreadyRunning(SessionAlreadyRunningException ex) {
+        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        pd.setType(URI.create("/errors/session-already-running"));
+        pd.setTitle("Session Already Running");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(pd);
+    }
+
     @ExceptionHandler(SessionAlreadyFinishedException.class)
     public ResponseEntity<ProblemDetail> handleAlreadyFinished(SessionAlreadyFinishedException ex) {
         var pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());

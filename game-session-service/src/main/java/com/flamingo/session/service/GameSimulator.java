@@ -8,6 +8,8 @@ import com.flamingo.session.client.dto.GameStateResponse;
 import com.flamingo.session.client.dto.PlayerValue;
 import com.flamingo.session.domain.Move;
 import com.flamingo.session.domain.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -20,8 +22,30 @@ import java.util.List;
 
 import static java.util.Objects.nonNull;
 
+/**
+ * Drives the move-by-move simulation of a Tic Tac Toe game by calling the Game
+ * Engine Service through {@link GameEngineClient}.
+ *
+ * <p>The simulation is a reactive pipeline:
+ * <pre>
+ *   Mono.defer(playOneMove)
+ *       .delayElement(moveDelayMs)
+ *       .repeat()
+ *       .takeUntil(state.status().isFinished())
+ * </pre>
+ *
+ * <p>Each move emission triggers a {@code MOVE_MADE} event on a per-session
+ * {@link reactor.core.publisher.Sinks.Many} replay sink, allowing late SSE
+ * subscribers to catch up on the full event history. The final
+ * {@code GAME_FINISHED} event is emitted before the sink completes.
+ *
+ * <p>Per-session state (sink + current game snapshot) lives in
+ * {@link SimulationContextRegistry} and is removed when the simulation ends.
+ */
 @Component
 public class GameSimulator {
+
+    private static final Logger log = LoggerFactory.getLogger(GameSimulator.class);
 
     private final GameEngineClient engineClient;
     private final MoveGenerator moveGenerator;
@@ -40,6 +64,7 @@ public class GameSimulator {
 
     public Mono<Void> simulate(Session session) {
         var context = registry.getOrCreate(session.getSessionId());
+        log.debug("Starting simulation loop for session {}", session.getSessionId());
 
         return Mono.defer(() -> playOneMove(session, context))
                 .delayElement(Duration.ofMillis(moveDelayMs))
@@ -76,6 +101,7 @@ public class GameSimulator {
     private void finishSession(Session session, SimulationContext context) {
         session.markFinished();
         var finalStatus = context.currentState().status();
+        log.info("Simulation finished for session {} with status {}", session.getSessionId(), finalStatus);
         context.events().tryEmitNext(new SimulationEvent(
                 SimulationEventType.GAME_FINISHED, null, finalStatus, null));
         context.events().tryEmitComplete();
@@ -83,6 +109,8 @@ public class GameSimulator {
     }
 
     private void failSession(Session session, SimulationContext context, Throwable err) {
+        log.warn("Simulation failed for session {}: {}", session.getSessionId(), err.getMessage());
+        session.markFailed();
         context.events().tryEmitNext(new SimulationEvent(
                 SimulationEventType.ERROR, null, null, err.getMessage()));
         context.events().tryEmitError(err);
@@ -90,7 +118,10 @@ public class GameSimulator {
     }
 
     private List<List<String>> emptyBoard() {
-        var row = Arrays.asList((String) null, null, null);
-        return List.of(row, row, row);
+        return List.of(
+                Arrays.asList(null, null, null),
+                Arrays.asList(null, null, null),
+                Arrays.asList(null, null, null)
+        );
     }
 }
